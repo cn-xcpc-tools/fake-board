@@ -182,9 +182,9 @@ namespace Board.Services
 
         public List<ProblemModel> Problems { get; private set; }
 
-        public DateTime BoardFreezeTime { get; private set; }
+        public DateTimeOffset BoardFreezeTime { get; private set; }
 
-        public DateTime LastUpdate { get; private set; }
+        public DateTimeOffset LastUpdate { get; private set; }
 
         public int SolvedTotal { get; set; } = 0;
 

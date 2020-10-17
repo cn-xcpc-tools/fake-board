@@ -2,12 +2,9 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Board.Services
@@ -182,10 +179,10 @@ namespace Board.Services
             scb.state = new State
             {
                 started = ctx.start_time,
-                ended = ctx.end_time < DateTime.Now ? ctx.end_time : default(DateTime?),
-                thawed = ctx.end_time < DateTime.Now ? ctx.end_time : default(DateTime?),
-                finalized = ctx.end_time < DateTime.Now ? ctx.end_time : default(DateTime?),
-                frozen = ctx.end_time < DateTime.Now ? ctx.end_time : default(DateTime?),
+                ended = ctx.end_time < DateTimeOffset.Now ? ctx.end_time : default(DateTimeOffset?),
+                thawed = ctx.end_time < DateTimeOffset.Now ? ctx.end_time : default(DateTimeOffset?),
+                finalized = ctx.end_time < DateTimeOffset.Now ? ctx.end_time : default(DateTimeOffset?),
+                frozen = ctx.end_time < DateTimeOffset.Now ? ctx.end_time : default(DateTimeOffset?),
             };
 
             // If there are two HDOJ scoreboard running,

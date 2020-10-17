@@ -25,12 +25,12 @@ namespace Board.Models
 
     public class State
     {
-        public DateTime? started { get; set; }
-        public DateTime? ended { get; set; }
-        public DateTime? frozen { get; set; }
-        public DateTime? thawed { get; set; }
-        public DateTime? finalized { get; set; }
-        public DateTime? end_of_updates { get; set; }
+        public DateTimeOffset? started { get; set; }
+        public DateTimeOffset? ended { get; set; }
+        public DateTimeOffset? frozen { get; set; }
+        public DateTimeOffset? thawed { get; set; }
+        public DateTimeOffset? finalized { get; set; }
+        public DateTimeOffset? end_of_updates { get; set; }
     }
 
     public class Row

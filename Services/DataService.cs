@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,16 +18,18 @@ namespace Board.Services
         internal readonly ILoggerFactory _loggerFactory;
 
         private readonly Dictionary<string, DataHolder> _dict;
+        public BoardOptions Options { get; }
 
         public DataHolder this[string name] => _dict.GetValueOrDefault(name) ?? new DataHolder(name, "Not Found", _loggerFactory);
 
-        public DataService(ILoggerFactory loggerFactory)
+        public DataService(ILoggerFactory loggerFactory, IOptions<BoardOptions> options)
         {
             Logger = loggerFactory.CreateLogger<DataService>();
             _loggerFactory = loggerFactory;
             _dict = new Dictionary<string, DataHolder>();
             Instance = this;
             Fetchers = new List<HdojFetcher>();
+            Options = options.Value;
         }
 
         public bool Have(string s)
@@ -43,49 +42,18 @@ namespace Board.Services
             _dict.TryAdd(name, new DataHolder(name, title, _loggerFactory));
         }
 
-        public List<Tenant> GetTenants()
+        public Tenant[] GetTenants()
         {
-            return _dict.Values.Select(a => new Tenant { name = a._name, title = a._title, hdoj = a._hdoj }).ToList();
-        }
-
-        private static T Parse<T>(string jsonString)
-        {
-            try
-            {
-                var json = new JsonSerializer();
-                if (jsonString == "") throw new JsonReaderException();
-                return json.Deserialize<T>(new JsonTextReader(new StringReader(jsonString)));
-            }
-            catch (JsonException)
-            {
-                return default(T);
-            }
+            return Options.Tenants ?? Array.Empty<Tenant>();
         }
 
         public readonly List<HdojFetcher> Fetchers;
 
-        public class Tenant
-        {
-            public string name { get; set; }
-            public string title { get; set; }
-            public string hdoj { get; set; }
-        }
-
-        private static string ToJson(object value)
-        {
-            var json = new JsonSerializer();
-            var sb = new StringBuilder();
-            json.Serialize(new JsonTextWriter(new StringWriter(sb)), value);
-            return sb.ToString();
-        }
-
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            if (File.Exists("tenant.json"))
+            if (Options.Tenants != null)
             {
-                var content = await File.ReadAllTextAsync("tenant.json");
-                var tenants = Parse<List<Tenant>>(content);
-                Logger.LogInformation("tenant.json cache loaded from disk.");
+                var tenants = Options.Tenants;
 
                 foreach (var tenant in tenants)
                 {
@@ -93,7 +61,7 @@ namespace Board.Services
                     await dataHolder.StartAsync();
                     _dict.TryAdd(tenant.name, dataHolder);
 
-                    if (tenant.hdoj != null)
+                    if (!string.IsNullOrEmpty(tenant.hdoj))
                     {
                         dataHolder._hdoj = tenant.hdoj;
                         var st = tenant.hdoj.Split(";");
@@ -116,9 +84,6 @@ namespace Board.Services
             {
                 await tenant.StopAsync();
             }
-
-            var items = tenants.Select(a => new Tenant { name = a._name, title = a._title, hdoj = a._hdoj }).ToList();
-            await File.WriteAllTextAsync("tenant.json", ToJson(items));
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

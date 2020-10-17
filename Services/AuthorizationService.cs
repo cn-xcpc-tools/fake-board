@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Board.Services
 {
@@ -10,12 +9,11 @@ namespace Board.Services
     {
         private readonly Dictionary<string, string> dict;
 
-        public AuthorizationService()
+        public AuthorizationService(IOptions<BoardOptions> options)
         {
-            dict = new Dictionary<string, string>
-            {
-                { "username", "password" }
-            };
+            dict = (options.Value.Password ?? Array.Empty<string>())
+                .Select(s => s.Split(new[] { ':' }, 2))
+                .ToDictionary(s => s[0], s => s[1]);
         }
 
         public bool Authorize(Tuple<string, string> auth)

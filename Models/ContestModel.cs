@@ -7,8 +7,8 @@ namespace Board.Models
     {
         public string formal_name { get; set; }
         public int penalty_time { get; set; }
-        public DateTime start_time { get; set; }
-        public DateTime end_time { get; set; }
+        public DateTimeOffset start_time { get; set; }
+        public DateTimeOffset end_time { get; set; }
         public string duration { get; set; }
         public string scoreboard_freeze_duration { get; set; }
         public string id { get; set; }

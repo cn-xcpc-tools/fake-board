@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Board.Models
+﻿namespace Board.Models
 {
 #pragma warning disable IDE1006
     public class TeamModel

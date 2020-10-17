@@ -1,7 +1,7 @@
 ﻿@{ 
     DataHolder data = ViewBag.Holder;
-    var start = new DateTimeOffset(data.Contest.start_time).ToUnixTimeSeconds();
-    var end = new DateTimeOffset(data.Contest.end_time).ToUnixTimeSeconds();
+    var start = data.Contest.start_time.ToUnixTimeSeconds();
+    var end = data.Contest.end_time.ToUnixTimeSeconds();
     var now = DateTimeOffset.Now.ToUnixTimeSeconds();
 
     long prog = now >= end ? 100 : (now - start) * 100 / (end - start);
