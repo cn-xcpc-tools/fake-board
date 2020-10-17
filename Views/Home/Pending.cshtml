@@ -1,0 +1,56 @@
+﻿@{
+    DataHolder data = ViewBag.Holder;
+    var ctx = data.Contest;
+}
+
+<h1 id="teamwelcome" class="text-center">
+    Welcome to @ctx.name!
+</h1>
+<h2 id="contestnotstarted" class="text-center">
+    Contest scheduled to start on @ctx.start_time.ToString("ddd, dd MMM yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) CST
+</h2>
+
+@section Scripts {
+
+    <script>
+        var domjudge_base_url = "/";
+        $(function () {
+            $('body').on('change', '.custom-file-input', function () {
+                var files = this.files;
+                var fileNames = [];
+                for (var i = 0; i < files.length; i++) {
+                    fileNames.push(files.item(i).name);
+                }
+                $(this).next('.custom-file-label').html(fileNames.join(", "));
+                $(this).next('.custom-file-label').removeClass('text-muted');
+            });
+
+            /* toggle refresh if set */
+            $('#refresh-navitem').on('click', function () {
+                toggleRefresh('/@data._name@Html.Raw(ViewData["CurrentQuery"])', 30, 1);
+            });
+            /* Enable page refresh if set if wanted by the page, and wanted by the user */
+            enableRefresh('/@data._name@Html.Raw(ViewData["CurrentQuery"])', 30, 1);
+
+            initializeAjaxModals();
+        });
+    </script>
+    <script>
+        initFavouriteTeams();
+
+        var scoreboardUrl = '/@data._name';
+
+        $(function () {
+            window.initializeScoreboard = function () {
+                var $newProgress = $('[data-ajax-refresh-target] > .d-none > [data-progress-bar]');
+                if ($newProgress.length) {
+                    var $oldProgress = $('body > [data-progress-bar]');
+                    $oldProgress.html($newProgress.children());
+                    $newProgress.parent().remove();
+                }
+
+                initFavouriteTeams();
+            };
+        });
+    </script>
+}
