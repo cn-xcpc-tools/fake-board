@@ -2,7 +2,7 @@
 
 我可能看了个假榜（雾
 
-这是一个基于 ASP.NET Core MVC 2.2 写的假榜，可以用于比赛的时候给外网教练们看。
+这是一个基于 ASP.NET Core MVC 3.1 写的假榜，可以用于比赛的时候给外网教练们看。
 
 默认模式为显示学校图片，请将affiliations里学校short_name变成小写字母后，放入wwwroot/images/affiliations/{lowercase_short_name}.png。
 
@@ -14,15 +14,15 @@
 dotnet run
 ```
 
-可以配合 Transfer 项目使用。
-
-DEMO: [2019东北地区赛的假榜](https://board.keji.moe:81/) （黑龙江省赛、吉林省赛、四川省赛都在用，嘻嘻）
+推荐配合 screen -R 使用。
 
 
 
-项目弄下来不修改参数是没办法外网访问的，如果你想直接让ASP.NET Core承载Web服务，请进入 `Properties\launchSettings.json` 修改 `"applicationUrl": "http://localhost:5000",`  这一部分。
+可以用于同步 HDOJ 的 STD Contest 榜单，详情请见 HdojFetcher 文件。
 
-或者你可以用nginx来反代，这是我的配置文件。
+
+
+你可以用nginx来反代，这是我的配置文件。
 
 ```nginx
 server {
@@ -43,7 +43,7 @@ server {
     }
 
     location @kreskel {
-        proxy_pass                http://localhost:5000;
+        proxy_pass                http://localhost:59644;
         proxy_http_version        1.1;
         proxy_set_header          Upgrade $http_upgrade;
         proxy_set_header          Connection keep-alive;
