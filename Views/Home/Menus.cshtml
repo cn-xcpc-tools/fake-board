@@ -11,7 +11,7 @@
         <div class="card-body text-center">
             <h3 class="card-title">@tenant.title</h3>
             <h6 class="card-subtitle mb-2 text-muted">@tenant.name</h6>
-            <h6 class="card-subtitle mb-2 text-muted">@(tenant.hdoj == null ? "External Source" : "HDU OJ Live")</h6>
+            <h6 class="card-subtitle mb-2 text-muted">@(string.IsNullOrEmpty(tenant.hdoj) ? "External Source" : "HDU OJ Live")</h6>
 
             <a class="btn btn-info" role="button" href="/@tenant.name">
                 <i class="fas fa-ticket-alt"></i>
