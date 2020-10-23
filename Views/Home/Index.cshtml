@@ -56,8 +56,11 @@ var org = orgs.ContainsKey(row.Team.organization_id)? orgs[row.Team.organization
             $('#refresh-navitem').on('click', function () {
                 toggleRefresh('/@data._name@Html.Raw(ViewData["CurrentQuery"])', 30, 1);
             });
+@if (data.Contest.end_time > DateTimeOffset.Now)
+{
             /* Enable page refresh if set if wanted by the page, and wanted by the user */
-            enableRefresh('/@data._name@Html.Raw(ViewData["CurrentQuery"])', 30, 1);
+            @:enableRefresh('/@data._name@Html.Raw(ViewData["CurrentQuery"])', 30, 1);
+}
 
             initializeAjaxModals();
         });
