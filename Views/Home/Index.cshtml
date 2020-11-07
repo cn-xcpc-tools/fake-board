@@ -10,15 +10,16 @@
     var orgs = data.Organizations;
     var grps = data.Groups;
     var lu = data.LastUpdate;
+    var hasFilter = ViewData.ContainsKey("Filter_categories");
 }
 
 <partial name="_Card" /><partial name="_Filter" />
 <table class="scoreboard center "><colgroup><col id="scorerank" /><col /><col id="scorelogos" /><col id="scoreteamname" /></colgroup>
 <colgroup><col id="scoresolv" /><col id="scoretotal" /></colgroup><colgroup><col class="scoreprob" /><col class="scoreprob" /><col class="scoreprob" /></colgroup><partial name="_THeader" />
 
-<tbody>@{ int lastRank = 0; }@foreach (var row in Model){
-var org = orgs.ContainsKey(row.Team.organization_id)? orgs[row.Team.organization_id]: new AffiliationModel { name = "cz" };
-<tr class="" id="team:@row.Base.team_id"><td class="scorepl">@if (lastRank != @row.Base.rank){@(row.Base.rank)lastRank = row.Base.rank;}</td>
+<tbody>@{ int lastRank = 0, frank = 0, frank2 = 0; }@foreach (var row in Model){
+var org = orgs.ContainsKey(row.Team.organization_id)? orgs[row.Team.organization_id]: new AffiliationModel { name = "cz" }; frank2++;
+<tr class="" id="team:@row.Base.team_id"><td class="scorepl">@if (lastRank != @row.Base.rank){lastRank = row.Base.rank;frank = frank2;@Html.Raw(hasFilter ? $"<span title=\"total {lastRank}, filtered {frank}\">{frank}</span>" : $"{lastRank}")}</td>
 <td class="scoreaf"></td><td class="scoreaf"><a><img src="/images/@(st ? "affiliations/" + org.name.ToLower() : "countries/CHN").png" alt="@row.Team.affiliation" title="@row.Team.affiliation" class="@(st ? "affiliation-logo" : "countryflag")"></a></td>
 <td class="scoretn cl_@grps[row.Team.group_ids[0]].color.TrimStart('#')" title="@row.Team.name"><a><span class="forceWidth">@row.Team.name</span>
 <span class="univ forceWidth">@row.Team.affiliation</span></a></td><td class="scorenc">@row.Base.score.num_solved</td><td class="scorett">@row.Base.score.total_time</td>
