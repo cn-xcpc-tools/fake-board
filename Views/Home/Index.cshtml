@@ -69,7 +69,7 @@ var org = orgs.ContainsKey(row.Team.organization_id)? orgs[row.Team.organization
     <script>
         initFavouriteTeams();
 
-        var scoreboardUrl = '/@data._name';
+        var scoreboardUrl = '/@data._name@Html.Raw(ViewData["CurrentQuery"])@Html.Raw(ViewData["CurrentQuery"])';
 
         $(function () {
             window.initializeScoreboard = function () {
